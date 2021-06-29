@@ -4,8 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.strictmode.WebViewMethodCalledOnWrongThreadViolation;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
@@ -29,6 +33,7 @@ public class TimelineActivity extends AppCompatActivity {
     RecyclerView rvTweets;
     List<Tweet> tweets;
     TweetsAdapter adapter;
+    Button logout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +42,14 @@ public class TimelineActivity extends AppCompatActivity {
 
         //FInd the recycler view
         rvTweets = findViewById(R.id.rvTweets);
+        logout = findViewById(R.id.bLogout);
         //Initialize the list of tweets and adapter
         tweets = new ArrayList<>();
         adapter = new TweetsAdapter(this, tweets);
         //Recycler view setup: layout manager and the adapter
         rvTweets.setLayoutManager(new LinearLayoutManager(this));
         rvTweets.setAdapter(adapter);
+
         // send network request
         client = TwitterApp.getRestClient(this);
         populateHomeTimeline();
@@ -65,6 +72,17 @@ public class TimelineActivity extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
                 Log.e(TAG, "onFailure" + response, throwable);
+            }
+        });
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                client.clearAccessToken(); // forget who's logged in
+                Intent i = new Intent(TimelineActivity.this, LoginActivity.class);
+                startActivity(i);
+                finish(); // navigate backwards to Login screen
+
             }
         });
     }
