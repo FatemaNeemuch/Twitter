@@ -2,7 +2,9 @@ package com.codepath.apps.restclienttemplate.models;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.parceler.Parcel;
 
+@Parcel
 public class User {
 
     //instance variable
@@ -10,6 +12,8 @@ public class User {
     public String screenName;
     public String profileImageURL;
 
+    //empty constructor needed by the Parceler Library
+    public User() {}
     //get user information from jsonObject
     public static User fromJson(JSONObject jsonObject) throws JSONException {
         User user = new User();
