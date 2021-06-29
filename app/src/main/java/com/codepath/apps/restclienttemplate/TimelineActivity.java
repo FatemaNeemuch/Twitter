@@ -62,7 +62,9 @@ public class TimelineActivity extends AppCompatActivity {
                 Log.i(TAG, "onSuccess" + json.toString());
                 JSONArray jsonArray = json.jsonArray;
                 try {
+                    //add tweet information from API to arraylist
                     tweets.addAll(Tweet.fromJsonArray(jsonArray));
+                    //notify adapter
                     adapter.notifyDataSetChanged();
                 } catch (JSONException e) {
                     Log.e(TAG, "JSON Exception", e);
@@ -78,10 +80,12 @@ public class TimelineActivity extends AppCompatActivity {
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                client.clearAccessToken(); // forget who's logged in
+                // forget who's logged in
+                client.clearAccessToken();
+                // navigate backwards to Login screen
                 Intent i = new Intent(TimelineActivity.this, LoginActivity.class);
                 startActivity(i);
-                finish(); // navigate backwards to Login screen
+                finish();
 
             }
         });

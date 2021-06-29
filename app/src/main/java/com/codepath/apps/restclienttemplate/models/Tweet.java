@@ -40,27 +40,38 @@ public class Tweet {
         return tweet;
     }
 
+    //how old the tweet is
     public String getRelativeTimeAgo(String rawJsonDate) {
         String twitterFormat = "EEE MMM dd HH:mm:ss ZZZZZ yyyy";
         SimpleDateFormat sf = new SimpleDateFormat(twitterFormat, Locale.ENGLISH);
         sf.setLenient(true);
 
         try {
+            //time the tweet was posted
             long dateMillis = sf.parse(rawJsonDate).getTime();
+            //current time
             long now = System.currentTimeMillis();
+            //difference in time between when the tweet was posted and the current time
             long diff = now - dateMillis;
+            //tweet posted less than a minute ago
             if (diff < MINUTE_MILLIS){
                 return "just now";
+            //tweet posted between 1 and 2 minutes ago
             }else if (diff < 2*MINUTE_MILLIS){
                 return "a minute ago";
+            //tweet posted within the hour
             }else if (diff < 50*MINUTE_MILLIS){
                 return diff/MINUTE_MILLIS + "m";
+            //tweet posted between 60 mins and 90mins
             }else if (diff < 90*MINUTE_MILLIS){
                 return "an hour ago";
+            //tweet posted within the day
             }else if (diff < 24*HOUR_MILLIS){
                 return diff/HOUR_MILLIS + "h";
+            //tweet posted between 24 and 48 hours
             }else if (diff < 48*HOUR_MILLIS){
                 return "yesterday";
+            //tweet posted more than 48 hours ago
             }else{
                 return diff/DAY_MILLIS + "d";
             }
