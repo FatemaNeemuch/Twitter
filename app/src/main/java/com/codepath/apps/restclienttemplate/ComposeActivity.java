@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.codepath.apps.restclienttemplate.databinding.ActivityComposeBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
@@ -26,24 +27,28 @@ public class ComposeActivity extends AppCompatActivity {
     public static final int MAX_TWEET_LENGTH = 140;
     public static final String TAG = "ComposeActivity";
 
+    //instance variables
     EditText etCompose;
-    Button btnTweet;
     TwitterClient client;
-    Button btnCancel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_compose);
+        // activity_simple.xml -> ActivitySimpleBinding
+        ActivityComposeBinding binding = ActivityComposeBinding.inflate(getLayoutInflater());
+
+        // layout of activity is stored in a special property called root
+        View view = binding.getRoot();
+        setContentView(view);
 
         //reference for views
-        etCompose = findViewById(R.id.etCompose);
-        btnTweet = findViewById(R.id.btnTweet);
-        btnCancel = findViewById(R.id.btnCancel);
+        etCompose = binding.etCompose;
 
+        // send network request
         client = TwitterApp.getRestClient(this);
 
-        btnCancel.setOnClickListener(new View.OnClickListener() {
+        //go back to timeline if cancel compose tweet
+        binding.btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
@@ -51,7 +56,7 @@ public class ComposeActivity extends AppCompatActivity {
         });
 
         //set click listener on compose button
-        btnTweet.setOnClickListener(new View.OnClickListener() {
+        binding.btnTweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String tweetContent = etCompose.getText().toString();

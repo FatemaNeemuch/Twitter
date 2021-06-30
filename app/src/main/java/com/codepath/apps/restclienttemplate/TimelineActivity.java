@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.codepath.apps.restclienttemplate.databinding.ActivityTimelineBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
@@ -80,17 +81,22 @@ public class TimelineActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_timeline);
+        // activity_simple.xml -> ActivitySimpleBinding
+        ActivityTimelineBinding binding = ActivityTimelineBinding.inflate(getLayoutInflater());
 
-        //FInd the recycler view
-        rvTweets = findViewById(R.id.rvTweets);
-        logout = findViewById(R.id.bLogout);
+        // layout of activity is stored in a special property called root
+        View view = binding.getRoot();
+        setContentView(view);
+
+        //reference to recycler view and logout button view
+        rvTweets = binding.rvTweets;
+        logout = binding.bLogout;
         //Initialize the list of tweets and adapter
         tweets = new ArrayList<>();
         adapter = new TweetsAdapter(this, tweets);
         //Recycler view setup: layout manager and the adapter
-        rvTweets.setLayoutManager(new LinearLayoutManager(this));
-        rvTweets.setAdapter(adapter);
+        binding.rvTweets.setLayoutManager(new LinearLayoutManager(this));
+        binding.rvTweets.setAdapter(adapter);
 
         // send network request
         client = TwitterApp.getRestClient(this);
@@ -142,6 +148,7 @@ public class TimelineActivity extends AppCompatActivity {
     }
 
 
+    //get timeline tweets
     private void populateHomeTimeline() {
         client.getHomeTimeline(new JsonHttpResponseHandler() {
             @Override

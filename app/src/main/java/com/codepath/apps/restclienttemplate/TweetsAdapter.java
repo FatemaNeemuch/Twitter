@@ -18,6 +18,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
+
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder>{
     //Pass in the context and list of tweets
     Context context;
@@ -95,11 +97,19 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvName.setText(tweet.user.name);
             if (!tweet.imageURLs.isEmpty()){
                 ivMediaImage.setVisibility(View.VISIBLE);
-                Glide.with(context).load(tweet.imageURLs.get(0)).into(ivMediaImage);
+                Glide.with(context)
+                        .load(tweet.imageURLs.get(0))
+                        .fitCenter()
+                        .transform(new RoundedCornersTransformation(30,10))
+                        .into(ivMediaImage);
             }else{
                 ivMediaImage.setVisibility(View.GONE);
             }
-            Glide.with(context).load(tweet.user.profileImageURL).into(ivProfileImage);
+            Glide.with(context)
+                    .load(tweet.user.profileImageURL)
+                    .fitCenter()
+                    .transform(new RoundedCornersTransformation(30,10))
+                    .into(ivProfileImage);
         }
     }
 }
