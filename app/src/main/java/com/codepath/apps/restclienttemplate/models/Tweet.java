@@ -31,6 +31,7 @@ public class Tweet {
     public String createdAt;
     public User user;
     public String relativeTime;
+    public List<String> imageURLs;
 
     //empty constructor needed by the Parceler Library
     public Tweet() {}
@@ -42,6 +43,19 @@ public class Tweet {
         tweet.createdAt = jsonObject.getString("created_at");
         tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
         tweet.relativeTime = tweet.getRelativeTimeAgo(tweet.createdAt);
+        tweet.imageURLs = new ArrayList<>();
+        if (jsonObject.has("extended_entities")){
+            JSONArray mediaArray = jsonObject.getJSONObject("extended_entities").getJSONArray("media");
+            for (int i = 0; i < mediaArray.length(); i++){
+                tweet.imageURLs.add(mediaArray.getJSONObject(i).getString("media_url_https"));
+            }
+        }else if (jsonObject.getJSONObject("entities").has("media")){
+            JSONArray mediaArray = jsonObject.getJSONObject("entities").getJSONArray("media");
+            for (int i = 0; i < mediaArray.length(); i++){
+                tweet.imageURLs.add(mediaArray.getJSONObject(i).getString("media_url_https"));
+            }
+        }
+        Log.i(TAG, "Media added" + tweet.imageURLs.toString());
         return tweet;
     }
 

@@ -72,6 +72,8 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
         TextView tvBody;
         TextView tvScreenName;
         TextView tvRelativeTime;
+        TextView tvName;
+        ImageView ivMediaImage;
 
         public ViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
@@ -81,13 +83,22 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.ViewHolder
             tvBody = itemView.findViewById(R.id.tvBody);
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
             tvRelativeTime = itemView.findViewById(R.id.tvRelativeTime);
+            tvName = itemView.findViewById(R.id.tvName);
+            ivMediaImage = itemView.findViewById(R.id.ivMediaImage);
         }
 
         public void bind(Tweet tweet) {
             //bind views to the data they are supposed to show
-            tvScreenName.setText(tweet.user.screenName);
+            tvScreenName.setText("@" + tweet.user.screenName);
             tvBody.setText(tweet.body);
             tvRelativeTime.setText(tweet.relativeTime);
+            tvName.setText(tweet.user.name);
+            if (!tweet.imageURLs.isEmpty()){
+                ivMediaImage.setVisibility(View.VISIBLE);
+                Glide.with(context).load(tweet.imageURLs.get(0)).into(ivMediaImage);
+            }else{
+                ivMediaImage.setVisibility(View.GONE);
+            }
             Glide.with(context).load(tweet.user.profileImageURL).into(ivProfileImage);
         }
     }

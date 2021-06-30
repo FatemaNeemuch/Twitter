@@ -29,6 +29,7 @@ public class ComposeActivity extends AppCompatActivity {
     EditText etCompose;
     Button btnTweet;
     TwitterClient client;
+    Button btnCancel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +39,16 @@ public class ComposeActivity extends AppCompatActivity {
         //reference for views
         etCompose = findViewById(R.id.etCompose);
         btnTweet = findViewById(R.id.btnTweet);
+        btnCancel = findViewById(R.id.btnCancel);
 
         client = TwitterApp.getRestClient(this);
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
 
         //set click listener on compose button
         btnTweet.setOnClickListener(new View.OnClickListener() {
