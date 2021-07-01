@@ -9,11 +9,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.databinding.ActivityComposeBinding;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -61,13 +63,40 @@ public class ComposeActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String tweetContent = etCompose.getText().toString();
                 //make sure tweet to post isn't empty
-                if (tweetContent.isEmpty()){
+                if (tweetContent.isEmpty()) {
                     Toast.makeText(ComposeActivity.this, "Your tweet cannot be empty", Toast.LENGTH_SHORT).show();
+//                    Snackbar snack = Snackbar.make(etCompose, "Your tweet cannot be empty", Snackbar.LENGTH_LONG);
+//                    snack.setAction("Undo", new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            etCompose.setText("");
+//                        }
+//                    });
+//                    View snackView = snack.getView();
+//                    RelativeLayout.LayoutParams params=(RelativeLayout.LayoutParams)view.getLayoutParams();
+//                    //figure out how to make it show at the top
+//                    //params.
+//                    view.setLayoutParams(params);
+//                    snack.show();
                     return;
                 }
+
                 //make sure tweet to post isn't too long
                 if (tweetContent.length() > MAX_TWEET_LENGTH){
                     Toast.makeText(ComposeActivity.this, "Your tweet is too long", Toast.LENGTH_SHORT).show();
+//                    Snackbar snack = Snackbar.make(etCompose, "Your tweet is too long", Snackbar.LENGTH_LONG);
+//                    snack.setAction("Undo", new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            etCompose.setText("");
+//                        }
+//                    });
+//                    View snackView = snack.getView();
+//                    RelativeLayout.LayoutParams params=(RelativeLayout.LayoutParams)view.getLayoutParams();
+//                    //figure out how to make it show at the top
+//                    //params.
+//                    view.setLayoutParams(params);
+//                    snack.show();
                     return;
                 }
                 //Make an API call to Twitter to publish the tweet

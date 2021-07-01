@@ -32,6 +32,7 @@ public class Tweet {
     public User user;
     public String relativeTime;
     public List<String> imageURLs;
+    public long id;
 
     //empty constructor needed by the Parceler Library
     public Tweet() {}
@@ -39,10 +40,15 @@ public class Tweet {
     //get tweet and user information from jsonObject
     public static Tweet fromJSON(JSONObject jsonObject) throws JSONException {
         Tweet tweet = new Tweet();
-        tweet.body = jsonObject.getString("text");
+        if(jsonObject.has("full_text")) {
+            tweet.body = jsonObject.getString("full_text");
+        } else {
+            tweet.body = jsonObject.getString("text");
+        }
         tweet.createdAt = jsonObject.getString("created_at");
         tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
         tweet.relativeTime = tweet.getRelativeTimeAgo(tweet.createdAt);
+        tweet.id = jsonObject.getLong("id");
         tweet.imageURLs = new ArrayList<>();
         if (jsonObject.has("extended_entities")){
             JSONArray mediaArray = jsonObject.getJSONObject("extended_entities").getJSONArray("media");
@@ -74,16 +80,16 @@ public class Tweet {
             long diff = now - dateMillis;
             //tweet posted less than a minute ago
             if (diff < MINUTE_MILLIS){
-                return "just now";
+                return "now";
             //tweet posted between 1 and 2 minutes ago
             }else if (diff < 2*MINUTE_MILLIS){
-                return "a minute ago";
+                return "1m";
             //tweet posted within the hour
             }else if (diff < 50*MINUTE_MILLIS){
                 return diff/MINUTE_MILLIS + "m";
             //tweet posted between 60 mins and 90mins
             }else if (diff < 90*MINUTE_MILLIS){
-                return "an hour ago";
+                return "1h";
             //tweet posted within the day
             }else if (diff < 24*HOUR_MILLIS){
                 return diff/HOUR_MILLIS + "h";

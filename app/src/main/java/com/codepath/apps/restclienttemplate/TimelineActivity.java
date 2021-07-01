@@ -42,7 +42,7 @@ public class TimelineActivity extends AppCompatActivity {
     RecyclerView rvTweets;
     List<Tweet> tweets;
     TweetsAdapter adapter;
-    Button logout;
+    EndlessRecyclerViewScrollListener scrollListener;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -88,19 +88,31 @@ public class TimelineActivity extends AppCompatActivity {
         View view = binding.getRoot();
         setContentView(view);
 
-        //reference to recycler view and logout button view
+        //reference to recycler view
         rvTweets = binding.rvTweets;
-        logout = binding.bLogout;
         //Initialize the list of tweets and adapter
         tweets = new ArrayList<>();
         adapter = new TweetsAdapter(this, tweets);
         //Recycler view setup: layout manager and the adapter
-        binding.rvTweets.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        binding.rvTweets.setLayoutManager(linearLayoutManager);
         binding.rvTweets.setAdapter(adapter);
 
         // send network request
         client = TwitterApp.getRestClient(this);
         populateHomeTimeline();
+
+        // Retain an instance so that you can call `resetState()` for fresh searches
+        scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+                loadNextDataFromApi();
+            }
+        };
+        // Adds the scroll listener to RecyclerView
+        rvTweets.addOnScrollListener(scrollListener);
 
         // Lookup the swipe container view
         swipeContainer = (SwipeRefreshLayout) findViewById(R.id.swipeContainer);
@@ -120,13 +132,57 @@ public class TimelineActivity extends AppCompatActivity {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
+
+        binding.bLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // forget who's logged in
+                client.clearAccessToken();
+                // navigate backwards to Login screen
+                Intent i = new Intent(TimelineActivity.this, LoginActivity.class);
+                startActivity(i);
+                finish();
+
+            }
+        });
+    }
+
+    // Append the next page of data into the adapter
+    // This method probably sends out a network request and appends new data items to your adapter.
+    public void loadNextDataFromApi() {
+        // Send an API request to retrieve appropriate paginated data
+        //  --> Send the request including an offset value (i.e `page`) as a query parameter.
+        //  --> Deserialize and construct new model objects from the API response
+        //  --> Append the new data objects to the existing set of items inside the array of items
+        //  --> Notify the adapter of the new items made with `notifyItemRangeInserted()`
+        Tweet lastTweet = tweets.get(tweets.size()-1);
+        //get tweets from before the current oldest shown tweet
+        client.getHomeTimeline(lastTweet.id, new JsonHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Headers headers, JSON json) {
+                JSONArray jsonArray = json.jsonArray;
+                try {
+                    //add tweet information from API to arraylist
+                    tweets.addAll(Tweet.fromJsonArray(jsonArray));
+                    //notify adapter
+                    adapter.notifyItemRangeChanged(tweets.size() - 26, 25);
+                } catch (JSONException e) {
+                    Log.e(TAG, "JSON Exception", e);
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
+
+            }
+        });
     }
 
     public void fetchTimelineAsync(int page) {
         // Send the network request to fetch the updated data
         // `client` here is an instance of Android Async HTTP
         // getHomeTimeline is an example endpoint.
-        client.getHomeTimeline(new JsonHttpResponseHandler() {
+        client.getHomeTimeline(-1, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 // Remember to CLEAR OUT old items before appending in the new ones
@@ -150,7 +206,7 @@ public class TimelineActivity extends AppCompatActivity {
 
     //get timeline tweets
     private void populateHomeTimeline() {
-        client.getHomeTimeline(new JsonHttpResponseHandler() {
+        client.getHomeTimeline(-1, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Headers headers, JSON json) {
                 Log.i(TAG, "onSuccess" + json.toString());
@@ -168,19 +224,6 @@ public class TimelineActivity extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
                 Log.e(TAG, "onFailure" + response, throwable);
-            }
-        });
-
-        logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // forget who's logged in
-                client.clearAccessToken();
-                // navigate backwards to Login screen
-                Intent i = new Intent(TimelineActivity.this, LoginActivity.class);
-                startActivity(i);
-                finish();
-
             }
         });
     }

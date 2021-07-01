@@ -27,6 +27,7 @@
         android:layout_marginEnd="54dp"
         android:layout_toStartOf="@+id/tvRelativeTime"
         android:layout_toEndOf="@+id/tvName"
+        android:singleLine="true"
         tools:text="FNeemuchwala" />
 
     <TextView
