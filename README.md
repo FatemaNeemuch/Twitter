@@ -55,6 +55,8 @@ GIF created with [Kap](https://getkap.co/).
 
 Describe any challenges encountered while building the app.
 
+Embedding images was challenging and required debugging often but I was able to fix the errors and get my code to work. List view was difficult to implement with my code.
+
 ## Open-source libraries used
 
 - [Android Async HTTP](https://github.com/loopj/android-async-http) - Simple asynchronous HTTP requests with JSON parsing
