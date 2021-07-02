@@ -90,10 +90,10 @@ public class TimelineActivity extends AppCompatActivity {
 
         //reference to recycler view
         rvTweets = binding.rvTweets;
-        //Initialize the list of tweets and adapter
-        tweets = new ArrayList<>();
         // send network request
         client = TwitterApp.getRestClient(this);
+        //Initialize the list of tweets and adapter
+        tweets = new ArrayList<>();
         adapter = new TweetsAdapter(this, tweets, client);
         //Recycler view setup: layout manager and the adapter
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -173,7 +173,7 @@ public class TimelineActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(int statusCode, Headers headers, String response, Throwable throwable) {
-
+                Log.e(TAG, "onFailure" + response, throwable);
             }
         });
     }
