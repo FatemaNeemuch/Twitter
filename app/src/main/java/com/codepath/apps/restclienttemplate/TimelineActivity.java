@@ -92,14 +92,14 @@ public class TimelineActivity extends AppCompatActivity {
         rvTweets = binding.rvTweets;
         //Initialize the list of tweets and adapter
         tweets = new ArrayList<>();
-        adapter = new TweetsAdapter(this, tweets);
+        // send network request
+        client = TwitterApp.getRestClient(this);
+        adapter = new TweetsAdapter(this, tweets, client);
         //Recycler view setup: layout manager and the adapter
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         binding.rvTweets.setLayoutManager(linearLayoutManager);
         binding.rvTweets.setAdapter(adapter);
 
-        // send network request
-        client = TwitterApp.getRestClient(this);
         populateHomeTimeline();
 
         // Retain an instance so that you can call `resetState()` for fresh searches

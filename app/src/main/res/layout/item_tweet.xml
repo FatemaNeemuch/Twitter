@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp">
+    android:layout_margin="3dp">
 
     <ImageView
         android:id="@+id/ivProfileImage"
@@ -73,5 +73,53 @@
         android:layout_marginTop="5dp"
         android:layout_marginEnd="84dp"
         tools:srcCompat="@tools:sample/avatars" />
+
+    <ImageView
+        android:id="@+id/ivLike"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_below="@+id/ivMediaImage"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="70dp"
+        android:layout_marginBottom="0dp"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <ImageView
+        android:id="@+id/ivRetweet"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_below="@+id/ivMediaImage"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="180dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="1dp"
+        tools:srcCompat="@tools:sample/avatars" />
+
+    <TextView
+        android:id="@+id/tvRetweetCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivRetweet"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="false"
+        android:layout_marginStart="185dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        tools:text="231" />
+
+    <TextView
+        android:id="@+id/tvLikeCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ivRetweet"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="false"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="70dp"
+        android:layout_marginBottom="2dp"
+        tools:text="231" />
 
 </RelativeLayout>

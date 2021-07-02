@@ -33,6 +33,10 @@ public class Tweet {
     public String relativeTime;
     public List<String> imageURLs;
     public long id;
+    public int favoriteCount;
+    public boolean favorited;
+    public int retweetCount;
+    public boolean retweeted;
 
     //empty constructor needed by the Parceler Library
     public Tweet() {}
@@ -49,6 +53,10 @@ public class Tweet {
         tweet.user = User.fromJson(jsonObject.getJSONObject("user"));
         tweet.relativeTime = tweet.getRelativeTimeAgo(tweet.createdAt);
         tweet.id = jsonObject.getLong("id");
+        tweet.favoriteCount = jsonObject.getInt("favorite_count");
+        tweet.favorited = jsonObject.getBoolean("favorited");
+        tweet.retweetCount = jsonObject.getInt("retweet_count");
+        tweet.retweeted = jsonObject.getBoolean("retweeted");
         tweet.imageURLs = new ArrayList<>();
         if (jsonObject.has("extended_entities")){
             JSONArray mediaArray = jsonObject.getJSONObject("extended_entities").getJSONArray("media");
